@@ -44,11 +44,11 @@ member_state(S, [_|T]) :-	member_state(S, T).
 
 /* move types */
 
-move(pickup(X), [handempty, clear(X), on(X, Y)],
+move(pickup(X), [handempty, clear(X), on(X, Y), inroom(X,Z), inroom(hand,Z)],
 		[del(handempty), del(clear(X)), del(on(X, Y)),
 				 add(clear(Y)),	add(holding(X))]).
 
-move(pickup(X), [handempty, clear(X), ontable(X)],
+move(pickup(X), [handempty, clear(X), ontable(X), inroom(X,Z), inroom(hand,Z)],
 		[del(handempty), del(clear(X)), del(ontable(X)),
 				 add(holding(X))]).
 
@@ -56,14 +56,14 @@ move(putdown(X), [holding(X)],
 		[del(holding(X)), add(ontable(X)), add(clear(X)),
 				  add(handempty)]).
 
-move(stack(X, Y), [holding(X), clear(Y)],
+move(stack(X, Y), [holding(X), clear(Y), inroom(Y,Z), inroom(hand,Z)],
 		[del(holding(X)), del(clear(Y)), add(handempty), add(on(X, Y)),
 				  add(clear(X))]).
 
-move(goroom2, [holding(X)],
+move(goroom2, [holding(X), inroom(hand,1)],
 		[del(inroom(X,1)), add(inroom(X,2)), del(inroom(hand,1)), add(inroom(hand,2))]).
 
-move(goroom1, [holding(X)],
+move(goroom1, [holding(X), inroom(hand,2)],
 		[del(inroom(X,2)), add(inroom(X,1)), del(inroom(hand,2)), add(inroom(hand,1))]).
 
 move(goroom2, [handempty, inroom(hand,1)],
@@ -74,7 +74,7 @@ move(goroom1, [handempty, inroom(hand,2)],
 
 /* helper stuff */
 
-inroom(X,Y) :- inroom(Z,Y), on(X,Z).
+/*inroom(X,Y) :- inroom(Z,Y), on(X,Z).*/
 
 /* run commands */
 
@@ -86,7 +86,7 @@ test :- go([handempty, ontable(b), ontable(c), on(a, b), clear(c), clear(a)],
 test2 :- go([handempty, ontable(b), ontable(c), on(a, b), clear(c), clear(a)],
 	          [handempty, ontable(a), ontable(b), on(c, b), clear(a), clear(c)]).
 
-test3 :- go([handempty, ontable(b), inroom(b,1), inroom(hand,1), on(a, b), clear(a)],
-	          [handempty, ontable(b), inroom(b,2), inroom(hand,1), on(a, b), clear(a)]).
+test3 :- go([handempty, inroom(hand,1), ontable(b), inroom(b,1), inroom(a,1), on(a, b), clear(a)],
+	          [handempty, inroom(hand,1), ontable(b), inroom(b,2), inroom(a,2),  on(a, b), clear(a)]).
 
 
