@@ -15,7 +15,7 @@
 :- module( planner,
 	   [
 	       plan/4,change_state/3,conditions_met/2,member_state/2,
-	       move/3,go/2,test/0,test2/0
+	       move/3,go/2,test/0,test2/0,test3/0
 	   ]).
 
 :- [utils].
@@ -60,6 +60,21 @@ move(stack(X, Y), [holding(X), clear(Y)],
 		[del(holding(X)), del(clear(Y)), add(handempty), add(on(X, Y)),
 				  add(clear(X))]).
 
+move(goroom2, [holding(X)],
+		[del(inroom(X,1)), add(inroom(X,2)), del(inroom(hand,1)), add(inroom(hand,2))]).
+
+move(goroom1, [holding(X)],
+		[del(inroom(X,2)), add(inroom(X,1)), del(inroom(hand,2)), add(inroom(hand,1))]).
+
+move(goroom2, [handempty, inroom(hand,1)],
+		[del(inroom(hand,1)), add(inroom(hand,2))]).
+
+move(goroom1, [handempty, inroom(hand,2)],
+		[del(inroom(hand,2)), add(inroom(hand,1))]).
+
+/* helper stuff */
+
+inroom(X,Y) :- inroom(Z,Y), on(X,Z).
 
 /* run commands */
 
@@ -71,7 +86,7 @@ test :- go([handempty, ontable(b), ontable(c), on(a, b), clear(c), clear(a)],
 test2 :- go([handempty, ontable(b), ontable(c), on(a, b), clear(c), clear(a)],
 	          [handempty, ontable(a), ontable(b), on(c, b), clear(a), clear(c)]).
 
-test3 :- go([handempty, ontable(b), inroom(b,1), on(a, b), clear(a)],
-	          [handempty, ontable(b), inroom(b,2), on(a, b), clear(a)]).
+test3 :- go([handempty, ontable(b), inroom(b,1), inroom(hand,1), on(a, b), clear(a)],
+	          [handempty, ontable(b), inroom(b,2), inroom(hand,1), on(a, b), clear(a)]).
 
 
