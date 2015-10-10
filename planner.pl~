@@ -1,4 +1,4 @@
-%%%%%%%%% Simple 2 Room Prolog Planner %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% Simple Prolog Planner %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%
 %%% Based on one of the sample programs in:
 %%%
@@ -6,10 +6,6 @@
 %%% Structures and strategies for complex problem solving
 %%%
 %%% by George F. Luger and William A. Stubblefield
-%%%
-%%%  UCF
-%%%	 CAP4630 Fall 2015 Assignment 2
-%%%  William Orem and Austin Pantoja
 %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- module( planner,
@@ -59,8 +55,6 @@ move(putdown(X), [holding(X)],
 move(stack(X, Y), [holding(X), clear(Y)],
 		[del(holding(X)), del(clear(Y)), add(handempty), add(on(X, Y)),
 				  add(clear(X))]).
-
-
 /* run commands */
 
 go(S, G) :- plan(S, G, [S], []).
@@ -70,8 +64,5 @@ test :- go([handempty, ontable(b), ontable(c), on(a, b), clear(c), clear(a)],
 
 test2 :- go([handempty, ontable(b), ontable(c), on(a, b), clear(c), clear(a)],
 	          [handempty, ontable(a), ontable(b), on(c, b), clear(a), clear(c)]).
-
-test3 :- go([handempty, ontable(b), inroom(b,1), on(a, b), clear(a)],
-	          [handempty, ontable(b), inroom(b,2), on(a, b), clear(a)]).
 
 
