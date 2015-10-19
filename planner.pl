@@ -15,7 +15,7 @@
 :- module( planner,
 	   [
 	       plan/4,change_state/3,conditions_met/2,member_state/2,
-	       move/3,go/2,test/0,test2/0,test3/0
+	       move/3,go/2,test/0,test2/0,test3/0,test4/0
 	   ]).
 
 :- [utils].
@@ -24,14 +24,8 @@ plan(State, Goal, _, Moves) :-	equal_set(State, Goal),
 				write('moves are'), nl,
 				reverse_print_stack(Moves).
 plan(State, Goal, Been_list, Moves) :-
-				move2(Name, Preconditions, Actions),
-				conditions_met(Preconditions, State),
-				change_state(State, Actions, Child_state),
-				not(member_state(Child_state, Been_list)),
-				stack(Child_state, Been_list, New_been_list),
-				stack(Name, Moves, New_moves),
-			plan(Child_state, Goal, New_been_list, New_moves),!.
-plan(State, Goal, Been_list, Moves) :-
+				not(member_set(inroom(hand,1),State)),
+				not(member_set(inroom(hand,2),State)),
 				move(Name, Preconditions, Actions),
 				conditions_met(Preconditions, State),
 				change_state(State, Actions, Child_state),
@@ -39,6 +33,17 @@ plan(State, Goal, Been_list, Moves) :-
 				stack(Child_state, Been_list, New_been_list),
 				stack(Name, Moves, New_moves),
 			plan(Child_state, Goal, New_been_list, New_moves),!.
+plan(State, Goal, Been_list, Moves) :-
+				move2(Name, Preconditions, Actions),
+				conditions_met(Preconditions, State),
+				change_state(State, Actions, Child_state),
+				not(member_state(Child_state, Been_list)),
+				stack(Child_state, Been_list, New_been_list),
+				stack(Name, Moves, New_moves),
+			plan(Child_state, Goal, New_been_list, New_moves),!.
+
+
+
 
 change_state(S, [], S).
 change_state(S, [add(P)|T], S_new) :-	change_state(S, T, S2),
@@ -114,6 +119,9 @@ test2 :- go([handempty, ontable(b), ontable(c), on(a, b), clear(c), clear(a)],
 	          [handempty, ontable(a), ontable(b), on(c, b), clear(a), clear(c)]).
 
 test3 :- go([handempty, inroom(hand,1), ontable(b), inroom(b,1), inroom(a,1), on(a, b), clear(a)],
+	          [handempty, inroom(hand,1), ontable(b), inroom(b,2), inroom(a,2),  on(a, b), clear(a)]).
+
+test4 :- go([holding(a), inroom(hand,1), ontable(b), inroom(b,2), inroom(a,1), clear(b)],
 	          [handempty, inroom(hand,1), ontable(b), inroom(b,2), inroom(a,2),  on(a, b), clear(a)]).
 
 
